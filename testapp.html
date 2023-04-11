@@ -1,0 +1,263 @@
+<html>
+    <head>
+        <title>Reaction Test Biol 3050</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(() => {
+
+                $("#submit-button").bind("click", function() {
+                    let result = 0;
+                    $("#aq-form input[type=radio]:checked").each(function() {
+                        if (this.value == "1" && this.checked == true) {
+                            result++;
+                        }
+                    })
+                    alert(result);
+                });
+
+                $("#start-response-test").bind("click", function() {
+                    let numChecked = 0;
+                    let aqScore = 0;
+                    $("#aq-form input[type=radio]:checked").each(function() {
+                        numChecked++;
+                        if (this.value == "1") {
+                            aqScore++;
+                        }
+                    })
+
+                    if (numChecked < 10) {
+                        alert("Please finish questions before starting response test!");
+                    } else {
+                        let canvas = $("#response-test-canvas")[0];
+                        let canvasChangeTimeStamp;
+                        let userClickTimeStamp;
+                        let responseDeltas = [];
+
+                        let numColorChanges = 0;
+                        let maxColorChanges = 5;
+
+                        let minColorChangeDelta = 3;
+                        let maxColorChangeDelta = 5;
+
+                        let canvasClickable = false;
+                        
+                        let getInterval = function() {
+                            
+                            return (Math.floor(Math.random() * (maxColorChangeDelta - minColorChangeDelta)) + minColorChangeDelta) * 1000;
+                        }
+
+
+                        let onCompletion = function() {
+                            alert("Test complete!");
+                            canvas.style.background = "white";
+                            $("#response-test-canvas").unbind("click");
+                            $("#start-response-test").unbind("click");
+                            console.log("aqScore", aqScore);
+                            console.log("responseDeltas: ", responseDeltas);
+                        }
+
+                        let changeColor = function() {
+                            canvas.style.background = "blue";
+
+                            canvasChangeTimeStamp = new Date() / 1000;
+
+                            numColorChanges++;
+
+                            canvasClickable = true;
+                        }
+
+                        let onClick = function() {
+                            if (!canvasClickable) return;
+                            canvasClickable = false;
+                            let currentTimeStamp = new Date() / 1000;
+                            responseDeltas.push(currentTimeStamp - canvasChangeTimeStamp);
+
+                            canvas.style.background = "white";
+
+                            if (numColorChanges == maxColorChanges) {
+                                onCompletion();
+                                return;
+                            }
+
+                            let nextInterval = getInterval();
+
+                            setTimeout(changeColor, nextInterval);
+                        }
+
+                        $("#response-test-canvas").bind("click", onClick);
+
+                        setTimeout(changeColor, getInterval());
+
+                    }
+                })
+
+            })
+        </script>
+
+    </head>
+
+    <body>
+        <form id="aq-form">
+            <!--Question 1-->
+            <p>I often notice small sounds when others do not</p>
+            <input type="radio" id="aq-1-op-1" name="aq-1" value="1"/>
+            <label for="aq-1-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-1-op-2" name="aq-1" value="1"/>
+            <label for="aq-1-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-1-op-3" name="aq-1" value="0"/>
+            <label for="aq-1-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-1-op-4" name="aq-1" value="0"/>
+            <label for="aq-1-op-4">Definitely Disagree</label> 
+
+            <!--Question 2-->
+            <p>I usually concentrate more on the whole picture, rather than the small details </p>
+            <input type="radio" id="aq-2-op-1" name="aq-2" value="0"/>
+            <label for="aq-2-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-2-op-2" name="aq-2" value="0"/>
+            <label for="aq-2-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-2-op-3" name="aq-2" value="1"/>
+            <label for="aq-2-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-2-op-4" name="aq-2" value="1"/>
+            <label for="aq-2-op-4">Definitely Disagree</label> 
+
+            <!--Question 3-->
+            <p>I find it easy to do more than one thing at once</p>
+            <input type="radio" id="aq-3-op-1" name="aq-3" value="0"/>
+            <label for="aq-3-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-3-op-2" name="aq-3" value="0"/>
+            <label for="aq-3-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-3-op-3" name="aq-3" value="1"/>
+            <label for="aq-3-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-3-op-4" name="aq-3" value="1"/>
+            <label for="aq-3-op-4">Definitely Disagree</label> 
+
+            <!--Question 4-->
+            <p>If there is an interruption, I can switch back to what I was doing very quickly </p>
+            <input type="radio" id="aq-4-op-1" name="aq-4" value="0"/>
+            <label for="aq-4-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-4-op-2" name="aq-4" value="0"/>
+            <label for="aq-4-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-4-op-3" name="aq-4" value="1"/>
+            <label for="aq-4-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-4-op-4" name="aq-4" value="1"/>
+            <label for="aq-4-op-4">Definitely Disagree</label> 
+
+            <!--Question 5-->
+            <p>I find it easy to ‘read between the lines’ when someone is talking to me</p>
+            <input type="radio" id="aq-5-op-1" name="aq-5" value="0"/>
+            <label for="aq-5-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-5-op-2" name="aq-5" value="0"/>
+            <label for="aq-5-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-5-op-3" name="aq-5" value="1"/>
+            <label for="aq-5-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-5-op-4" name="aq-5" value="1"/>
+            <label for="aq-5-op-4">Definitely Disagree</label> 
+
+            <!--Question 6-->
+            <p>I know how to tell if someone listening to me is getting bored</p>
+            <input type="radio" id="aq-6-op-1" name="aq-6" value="0"/>
+            <label for="aq-6-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-6-op-2" name="aq-6" value="0"/>
+            <label for="aq-6-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-6-op-3" name="aq-6" value="1"/>
+            <label for="aq-6-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-6-op-4" name="aq-6" value="1"/>
+            <label for="aq-6-op-4">Definitely Disagree</label> 
+
+            <!--Question 7-->
+            <p>When I’m reading a story I find it difficult to work out the characters’ intentions </p>
+            <input type="radio" id="aq-7-op-1" name="aq-7" value="1"/>
+            <label for="aq-7-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-7-op-2" name="aq-7" value="1"/>
+            <label for="aq-7-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-7-op-3" name="aq-7" value="0"/>
+            <label for="aq-7-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-7-op-4" name="aq-7" value="0"/>
+            <label for="aq-7-op-4">Definitely Disagree</label> 
+
+            <!--Question 8-->
+            <p>I like to collect information about categories of things (e.g. types of car, types of bird, types of train, types of plant etc) </p>
+            <input type="radio" id="aq-8-op-1" name="aq-8" value="1"/>
+            <label for="aq-8-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-8-op-2" name="aq-8" value="1"/>
+            <label for="aq-8-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-8-op-3" name="aq-8" value="0"/>
+            <label for="aq-8-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-8-op-4" name="aq-8" value="0"/>
+            <label for="aq-8-op-4">Definitely Disagree</label> 
+
+            <!--Question 9-->
+            <p>I find it easy to work out what someone is thinking or feeling just by looking at their face </p>
+            <input type="radio" id="aq-9-op-1" name="aq-9" value="0"/>
+            <label for="aq-9-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-9-op-2" name="aq-9" value="0"/>
+            <label for="aq-9-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-9-op-3" name="aq-9" value="1"/>
+            <label for="aq-9-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-9-op-4" name="aq-9" value="1"/>
+            <label for="aq-9-op-4">Definitely Disagree</label> 
+
+            <!--Question 10-->
+            <p>I find it difficult to work out people’s intentions</p>
+            <input type="radio" id="aq-10-op-1" name="aq-10" value="1"/>
+            <label for="aq-10-op-1">Definitely Agree</label> 
+
+            <input type="radio" id="aq-10-op-2" name="aq-10" value="1"/>
+            <label for="aq-10-op-2">Slightly Agree</label> 
+
+            <input type="radio" id="aq-10-op-3" name="aq-10" value="0"/>
+            <label for="aq-10-op-3">Slightly Disagree</label> 
+
+            <input type="radio" id="aq-10-op-4" name="aq-10" value="0"/>
+            <label for="aq-10-op-4">Definitely Disagree</label> 
+        </form>
+
+        <canvas
+            style="border: 1px solid black"
+            id="response-test-canvas"
+        >
+
+        </canvas>
+
+        <!-- Response test instructions -->
+        <p>
+            This test is to measure your response time.
+            Once you click the "Start Response Test" button below, the square above will start to change colors at random intervals.
+            Once you see the color change, click the square as quickly as possible, but avoid clicking the square if the color has not changed.
+        </p>
+
+        <!-- Start response test button -->
+        <br/>
+        <button id="start-response-test" type="button">Start Response Test</button>
+
+    </body>
+</html>
