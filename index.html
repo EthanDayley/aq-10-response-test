@@ -20,16 +20,6 @@
         <script>
             $(document).ready(() => {
 
-                $("#submit-button").bind("click", function() {
-                    let result = 0;
-                    $("#aq-form input[type=radio]:checked").each(function() {
-                        if (this.value == "1" && this.checked == true) {
-                            result++;
-                        }
-                    })
-                    alert(result);
-                });
-
                 $("#start-response-test").bind("click", function() {
                     let numChecked = 0;
                     let aqScore = 0;
@@ -43,13 +33,17 @@
                     if (numChecked < 10) {
                         alert("Please finish questions before starting response test!");
                     } else {
+                        // disable button
+                        $("#start-response-test").attr("disabled", "disabled");
+                        $("#start-response-test").html("Test Started - Get Ready!");
+
                         let canvas = $("#response-test-canvas")[0];
                         let canvasChangeTimeStamp;
                         let userClickTimeStamp;
                         let responseDeltas = [];
 
                         let numColorChanges = 0;
-                        let maxColorChanges = 5;
+                        let maxColorChanges = 10;
 
                         let minColorChangeDelta = 3;
                         let maxColorChangeDelta = 5;
@@ -61,9 +55,12 @@
                             return (Math.floor(Math.random() * (maxColorChangeDelta - minColorChangeDelta)) + minColorChangeDelta) * 1000;
                         }
 
+                        let setButtonText = function() {
+                            $("#start-response-test").html("Test Started - " + (maxColorChanges - numColorChanges) + "/" + maxColorChanges + " Remaining")
+                        }
 
                         let onCompletion = function() {
-                            alert("Test complete!");
+                            alert("Test complete, you can now close the page. Thank you so much for participating!");
                             canvas.style.background = "white";
                             $("#response-test-canvas").unbind("click");
                             $("#start-response-test").unbind("click");
@@ -99,6 +96,8 @@
 
                             canvas.style.background = "white";
 
+                            setButtonText();
+
                             if (numColorChanges == maxColorChanges) {
                                 onCompletion();
                                 return;
@@ -108,6 +107,15 @@
 
                             setTimeout(changeColor, nextInterval);
                         }
+
+                        setButtonText();
+
+                        // add canvas text
+                        let ctx = canvas.getContext("2d");
+                        ctx.font = "30px Arial";
+                        ctx.textAlign = "center";
+                        ctx.fillText("Click here when", canvas.width/2, (canvas.height/2)-15);
+                        ctx.fillText("color changes!", canvas.width/2, (canvas.height/2)+15);
 
                         $("#response-test-canvas").bind("click", onClick);
 
@@ -121,21 +129,22 @@
 
     </head>
 
-    <body>
-        <h1>Section 1: Questions</h1>
+    <body style="margin:40px">
+        <h2>Section 1: Questions</h2>
         <!-- AQ-10 test instructions -->
-        <b>Instructions:</b>
-        <p>
-            These questions evaluate a set of personality traits.
-            All data is completely anonymized, so take your time and answer honestly!
-            Once you complete this section, there will be a short reaction time test.
-        </p>
+        <b>Instructions/info (please read):</b>
+        <ul>
+            <li>These questions evaluate a set of personality traits.</li>
+            <li>All data is completely anonymized, so take your time and answer honestly!</li>
+            <li>Once you complete this section, there will be a short reaction time test.</li>
+            <li>Then entire survey should take less than 10 minutes to complete.</li>
+        </ul>
 
         <form id="aq-form">
 
             <!--Question 1-->
             <div class="form-group">
-                <p>I often notice small sounds when others do not</p>
+                <p><b>Q1: I often notice small sounds when others do not</b></p>
                 <input type="radio" id="aq-1-op-1" name="aq-1" value="1"/>
                 <label for="aq-1-op-1">Definitely Agree</label> 
 
@@ -151,7 +160,7 @@
 
             <!--Question 2-->
             <div class="form-group">
-                <p>I usually concentrate more on the whole picture, rather than the small details </p>
+                <p><b>Q2: I usually concentrate more on the whole picture, rather than the small details </b></p>
                 <input type="radio" id="aq-2-op-1" name="aq-2" value="0"/>
                 <label for="aq-2-op-1">Definitely Agree</label> 
 
@@ -167,7 +176,7 @@
 
             <!--Question 3-->
             <div class="form-group">
-                <p>I find it easy to do more than one thing at once</p>
+                <p><b>Q3: I find it easy to do more than one thing at once</b></p>
                 <input type="radio" id="aq-3-op-1" name="aq-3" value="0"/>
                 <label for="aq-3-op-1">Definitely Agree</label> 
 
@@ -183,7 +192,7 @@
 
             <!--Question 4-->
             <div class="form-group">
-                <p>If there is an interruption, I can switch back to what I was doing very quickly </p>
+                <p><b>Q4: If there is an interruption, I can switch back to what I was doing very quickly </b></p>
                 <input type="radio" id="aq-4-op-1" name="aq-4" value="0"/>
                 <label for="aq-4-op-1">Definitely Agree</label> 
 
@@ -199,7 +208,7 @@
 
             <!--Question 5-->
             <div class="form-group">
-                <p>I find it easy to ‘read between the lines’ when someone is talking to me</p>
+                <p><b>Q5: I find it easy to ‘read between the lines’ when someone is talking to me</b></p>
                 <input type="radio" id="aq-5-op-1" name="aq-5" value="0"/>
                 <label for="aq-5-op-1">Definitely Agree</label> 
 
@@ -215,7 +224,7 @@
 
             <!--Question 6-->
             <div class="form-group">
-                <p>I know how to tell if someone listening to me is getting bored</p>
+                <p><b>Q6: I know how to tell if someone listening to me is getting bored</b></p>
                 <input type="radio" id="aq-6-op-1" name="aq-6" value="0"/>
                 <label for="aq-6-op-1">Definitely Agree</label> 
 
@@ -231,7 +240,7 @@
 
             <!--Question 7-->
             <div class="form-group">
-                <p>When I’m reading a story I find it difficult to work out the characters’ intentions </p>
+                <p><b>Q7: When I’m reading a story I find it difficult to work out the characters’ intentions </b></p>
                 <input type="radio" id="aq-7-op-1" name="aq-7" value="1"/>
                 <label for="aq-7-op-1">Definitely Agree</label> 
 
@@ -247,7 +256,7 @@
 
             <!--Question 8-->
             <div class="form-group">
-                <p>I like to collect information about categories of things (e.g. types of car, types of bird, types of train, types of plant etc) </p>
+                <p><b>Q8: I like to collect information about categories of things (e.g. types of car, types of bird, types of train, types of plant etc) </b></p>
                 <input type="radio" id="aq-8-op-1" name="aq-8" value="1"/>
                 <label for="aq-8-op-1">Definitely Agree</label> 
 
@@ -263,7 +272,7 @@
 
             <!--Question 9-->
             <div class="form-group">
-                <p>I find it easy to work out what someone is thinking or feeling just by looking at their face </p>
+                <p><b>Q9: I find it easy to work out what someone is thinking or feeling just by looking at their face </b></p>
                 <input type="radio" id="aq-9-op-1" name="aq-9" value="0"/>
                 <label for="aq-9-op-1">Definitely Agree</label> 
 
@@ -279,7 +288,7 @@
 
             <!--Question 10-->
             <div class="form-group">
-                <p>I find it difficult to work out people’s intentions</p>
+                <p><b>Q10: I find it difficult to work out people’s intentions</b></p>
                 <input type="radio" id="aq-10-op-1" name="aq-10" value="1"/>
                 <label for="aq-10-op-1">Definitely Agree</label> 
 
@@ -297,15 +306,15 @@
 
         <hr/>
 
-        <h1>Section 2: Response Test</h1>
+        <h2>Section 2: Response Test</h2>
 
         <!-- Response test instructions -->
-        <b>Instructions:</b>
-        <p>
-            This test is to measure your response time.
-            Once you click the "Start Response Test" button below, the square will start to change colors at random intervals.
-            Once you see the color change, click the square as quickly as possible, but avoid clicking the square if the color has not changed.
-        </p>
+        <b>Instructions (please read):</b>
+        <ul>
+            <li>Once you click the "Start Response Test" button below, the square will start to change colors at random intervals.</li>
+            <li>Whenever you see the color change to blue, click the square as quickly as possible.</li>
+            <li>The color will change a total of 10 times, after which the test will be complete.</li>
+        </ul>
 
         <canvas
             style="border: 1px solid black"
@@ -316,7 +325,7 @@
 
         <!-- Start response test button -->
         <br/>
-        <button id="start-response-test" type="button">Start Response Test</button>
+        <button class="btn btn-primary" style="margin: 10px;" id="start-response-test" type="button">Start Response Test</button>
 
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
