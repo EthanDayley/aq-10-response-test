@@ -2,7 +2,18 @@
     <head>
         <title>Reaction Test Biol 3050</title>
 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+        <script type="text/javascript">
+            (function() {
+                // https://dashboard.emailjs.com/admin/account
+                emailjs.init('Hkzjzo5xKfmrFXiNx');
+            })();
+        </script>
 
         <script>
             $(document).ready(() => {
@@ -56,6 +67,16 @@
                             $("#start-response-test").unbind("click");
                             console.log("aqScore", aqScore);
                             console.log("responseDeltas: ", responseDeltas);
+
+                            console.log("Sending email...");
+                            let msg = "AQ-10: " + aqScore + ", responseDeltas: " + responseDeltas
+                            console.log("msg: ", msg);
+                            emailjs.send('biol_3050_study_service', 'biol_3050_study_form', {message: msg})
+                                .then(function() {
+                                    console.log("Success!");
+                                }, function(error) {
+                                    console.log("FAILED...", error);
+                                });
                         }
 
                         let changeColor = function() {
@@ -259,5 +280,7 @@
         <br/>
         <button id="start-response-test" type="button">Start Response Test</button>
 
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 </html>
